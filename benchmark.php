@@ -22,7 +22,7 @@ function dump_benchmark(int $start_memory_usage, float $start_time) {
 function pre_benchmark_memory(): int {
     $current_memory_usage = memory_get_usage(real_usage: true);
 
-    echo "Pre Benchmark Memory Usage:\t"
+    echo "\nPre Benchmark Memory Usage:\t"
         . number_format($current_memory_usage)
         . " bytes\n";
 
@@ -65,6 +65,32 @@ benchmark(function(callable $dump_benchmark_fn) {
 
 // ============================== Benchmark 3 ==================================
 
+echo "\nPlain fake auto indexed string array benchmark...\n";
+
+benchmark(function(callable $dump_benchmark_fn) {
+    $array = [];
+    for ($i = 0; $i < 1_000_000; $i++) {
+        $array[] = strval($i);
+    }
+
+    $dump_benchmark_fn();
+});
+
+// ============================== Benchmark 4 ==================================
+
+echo "\nPlain string indexed array benchmark...\n";
+
+benchmark(function(callable $dump_benchmark_fn) {
+    $array = [];
+    for ($i = 0; $i < 1_000_000; $i++) {
+        $array["index-".$i] = strval($i);
+    }
+
+    $dump_benchmark_fn();
+});
+
+// ============================== Benchmark 5 ==================================
+
 echo "\nTypesafe int array object (int index) benchmark...\n";
 
 class IntArray extends \ArrayObject {
@@ -86,7 +112,7 @@ benchmark(function(callable $dump_benchmark_fn) {
     $dump_benchmark_fn();
 });
 
-// ============================== Benchmark 4 ==================================
+// ============================== Benchmark 6 ==================================
 
 echo "\nTypesafe int array object (string index) benchmark...\n";
 
@@ -99,7 +125,7 @@ benchmark(function(callable $dump_benchmark_fn) {
     $dump_benchmark_fn();
 });
 
-// ============================== Benchmark 5 ==================================
+// ============================== Benchmark 7 ==================================
 
 echo "\nTypesafe string array object (int index) benchmark...\n";
 
@@ -122,7 +148,7 @@ benchmark(function(callable $dump_benchmark_fn) {
     $dump_benchmark_fn();
 });
 
-// ============================== Benchmark 6 ==================================
+// ============================== Benchmark 8 ==================================
 
 echo "\nTypesafe string array object (string index) benchmark...\n";
 
@@ -135,7 +161,7 @@ benchmark(function(callable $dump_benchmark_fn) {
     $dump_benchmark_fn();
 });
 
-// ============================== Benchmark 7 ==================================
+// ============================== Benchmark 9 ==================================
 
 echo "\nTypesafe int set object (int index) benchmark...\n";
 
@@ -174,7 +200,7 @@ benchmark(function(callable $dump_benchmark_fn) {
     $dump_benchmark_fn();
 });
 
-// ============================== Benchmark 8 ==================================
+// ============================== Benchmark 10 =================================
 
 echo "\nTypesafe int set object (string index) benchmark...\n";
 
@@ -213,7 +239,7 @@ benchmark(function(callable $dump_benchmark_fn) {
     $dump_benchmark_fn();
 });
 
-// ============================== Benchmark 9 ==================================
+// ============================== Benchmark 11 =================================
 
 echo "\nTypesafe string set object (int index) benchmark...\n";
 
@@ -252,7 +278,7 @@ benchmark(function(callable $dump_benchmark_fn) {
     $dump_benchmark_fn();
 });
 
-// ============================== Benchmark 10 =================================
+// ============================== Benchmark 12 =================================
 
 echo "\nTypesafe string set object (string index) benchmark...\n";
 
@@ -301,7 +327,7 @@ benchmark(function(callable $dump_benchmark_fn) {
 
 exit;
 
-// ============================== Benchmark 11 =================================
+// ============================== Benchmark 13 =================================
 
 echo "\nTypesafe, immutable int set object (int index) benchmark...\n";
 
@@ -343,7 +369,7 @@ benchmark(function(callable $dump_benchmark_fn) {
     $dump_benchmark_fn();
 });
 
-// ============================== Benchmark 12 =================================
+// ============================== Benchmark 14 =================================
 
 echo "\nTypesafe, immutable int set object (string index) benchmark...\n";
 
@@ -385,7 +411,7 @@ benchmark(function(callable $dump_benchmark_fn) {
     $dump_benchmark_fn();
 });
 
-// ============================== Benchmark 13 =================================
+// ============================== Benchmark 15 =================================
 
 echo "\nTypesafe, immutable string set object (int index) benchmark...\n";
 
@@ -427,7 +453,7 @@ benchmark(function(callable $dump_benchmark_fn) {
     $dump_benchmark_fn();
 });
 
-// ============================== Benchmark 14 =================================
+// ============================== Benchmark 16 =================================
 
 echo "\nTypesafe, immutable string set object (string index) benchmark...\n";
 
