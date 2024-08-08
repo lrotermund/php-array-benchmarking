@@ -1,0 +1,20 @@
+services:
+  php80-benchmark:
+    build:
+      context: php80
+
+  php81-benchmark:
+    build:
+      context: php81
+
+  php82-benchmark:
+    build:
+      context: php82
+
+  php83-benchmark:
+    build:
+      context: php83
+
+  php84-benchmark:
+    build:
+      context: php84
