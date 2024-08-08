@@ -2,45 +2,66 @@
 
 declare(strict_types=1);
 
-function dump_benchmark(float $start_time) {
+function dump_benchmark(int $start_memory_usage, float $start_time) {
     $end_time = microtime(as_float: true);
     $execution_time = $end_time - $start_time;
-    $memory_usage = memory_get_peak_usage(real_usage: true);
+    $end_memory_usage = memory_get_usage(real_usage: true);
 
-    echo "Benchmark completed.\n";
-    echo "Execution Time:\t"
+    echo "\nBenchmark completed.\n";
+    echo "Post Benchmark Memory Usage:\t"
+        . number_format($end_memory_usage)
+        . " bytes\n";
+    echo "Execution Time:\t\t\t"
         . number_format($execution_time, decimals: 10)
         . " seconds\n";
-    echo "Peak Memory Usage:\t"
-        . number_format($memory_usage)
+    echo "Memory Usage:\t\t\t"
+        . number_format($end_memory_usage - $start_memory_usage)
         . " bytes\n";
+}
+
+function pre_benchmark_memory(): int {
+    $current_memory_usage = memory_get_usage(real_usage: true);
+
+    echo "Pre Benchmark Memory Usage:\t"
+        . number_format($current_memory_usage)
+        . " bytes\n";
+
+    return $current_memory_usage;
+}
+
+function benchmark(callable $benchmark_fn) {
+    $start_memory_usage = pre_benchmark_memory();
+
+    $start_time = microtime(as_float: true);
+
+    $benchmark_fn(fn () => dump_benchmark($start_memory_usage, $start_time));
 }
 
 // ============================== Benchmark 1 ==================================
 
 echo "Plain fake auto indexed array benchmark...\n";
 
-$start_time = microtime(as_float: true);
+benchmark(function(callable $dump_benchmark_fn) {
+    $array = [];
+    for ($i = 0; $i < 1_000_000; $i++) {
+        $array[] = $i;
+    }
 
-$array = [];
-for ($i = 0; $i < 1_000_000; $i++) {
-    $array[] = $i;
-}
-
-dump_benchmark($start_time);
+    $dump_benchmark_fn();
+});
 
 // ============================== Benchmark 2 ==================================
 
 echo "\nPlain string indexed array benchmark...\n";
 
-$start_time = microtime(as_float: true);
+benchmark(function(callable $dump_benchmark_fn) {
+    $array = [];
+    for ($i = 0; $i < 1_000_000; $i++) {
+        $array["index-".$i] = $i;
+    }
 
-$array = [];
-for ($i = 0; $i < 1_000_000; $i++) {
-    $array["index-".$i] = $i;
-}
-
-dump_benchmark($start_time);
+    $dump_benchmark_fn();
+});
 
 // ============================== Benchmark 3 ==================================
 
@@ -56,27 +77,27 @@ class IntArray extends \ArrayObject {
     }
 }
 
-$start_time = microtime(true);
+benchmark(function(callable $dump_benchmark_fn) {
+    $array = new IntArray();
+    for ($i = 0; $i < 1_000_000; $i++) {
+        $array[$i] = $i;
+    }
 
-$array = new IntArray();
-for ($i = 0; $i < 1_000_000; $i++) {
-    $array[$i] = $i;
-}
-
-dump_benchmark($start_time);
+    $dump_benchmark_fn();
+});
 
 // ============================== Benchmark 4 ==================================
 
 echo "\nTypesafe int array object (string index) benchmark...\n";
 
-$start_time = microtime(true);
+benchmark(function(callable $dump_benchmark_fn) {
+    $array = new IntArray();
+    for ($i = 0; $i < 1_000_000; $i++) {
+        $array["index-".$i] = $i;
+    }
 
-$array = new IntArray();
-for ($i = 0; $i < 1_000_000; $i++) {
-    $array["index-".$i] = $i;
-}
-
-dump_benchmark($start_time);
+    $dump_benchmark_fn();
+});
 
 // ============================== Benchmark 5 ==================================
 
@@ -92,27 +113,27 @@ class StringArray extends \ArrayObject {
     }
 }
 
-$start_time = microtime(true);
+benchmark(function(callable $dump_benchmark_fn) {
+    $array = new StringArray();
+    for ($i = 0; $i < 1_000_000; $i++) {
+        $array[$i] = strval($i);
+    }
 
-$array = new StringArray();
-for ($i = 0; $i < 1_000_000; $i++) {
-    $array[$i] = strval($i);
-}
-
-dump_benchmark($start_time);
+    $dump_benchmark_fn();
+});
 
 // ============================== Benchmark 6 ==================================
 
 echo "\nTypesafe string array object (string index) benchmark...\n";
 
-$start_time = microtime(true);
+benchmark(function(callable $dump_benchmark_fn) {
+    $array = new StringArray();
+    for ($i = 0; $i < 1_000_000; $i++) {
+        $array["index-".$i] = strval($i);
+    }
 
-$array = new StringArray();
-for ($i = 0; $i < 1_000_000; $i++) {
-    $array["index-".$i] = strval($i);
-}
-
-dump_benchmark($start_time);
+    $dump_benchmark_fn();
+});
 
 // ============================== Benchmark 7 ==================================
 
@@ -144,14 +165,14 @@ class IntSet implements \IteratorAggregate {
     }
 }
 
-$start_time = microtime(true);
+benchmark(function(callable $dump_benchmark_fn) {
+    $array = new IntSet();
+    for ($i = 0; $i < 1_000_000; $i++) {
+        $array->add($i, $i);
+    }
 
-$array = new IntSet();
-for ($i = 0; $i < 1_000_000; $i++) {
-    $array->add($i, $i);
-}
-
-dump_benchmark($start_time);
+    $dump_benchmark_fn();
+});
 
 // ============================== Benchmark 8 ==================================
 
@@ -183,14 +204,14 @@ class IntSetStrIndex implements \IteratorAggregate {
     }
 }
 
-$start_time = microtime(true);
+benchmark(function(callable $dump_benchmark_fn) {
+    $array = new IntSetStrIndex();
+    for ($i = 0; $i < 1_000_000; $i++) {
+        $array->add("index-".$i, $i);
+    }
 
-$array = new IntSetStrIndex();
-for ($i = 0; $i < 1_000_000; $i++) {
-    $array->add("index-".$i, $i);
-}
-
-dump_benchmark($start_time);
+    $dump_benchmark_fn();
+});
 
 // ============================== Benchmark 9 ==================================
 
@@ -222,14 +243,14 @@ class StringSet implements \IteratorAggregate {
     }
 }
 
-$start_time = microtime(true);
+benchmark(function(callable $dump_benchmark_fn) {
+    $array = new StringSet();
+    for ($i = 0; $i < 1_000_000; $i++) {
+        $array->add($i, strval($i));
+    }
 
-$array = new StringSet();
-for ($i = 0; $i < 1_000_000; $i++) {
-    $array->add($i, strval($i));
-}
-
-dump_benchmark($start_time);
+    $dump_benchmark_fn();
+});
 
 // ============================== Benchmark 10 =================================
 
@@ -261,14 +282,14 @@ class StringSetStrIndex implements \IteratorAggregate {
     }
 }
 
-$start_time = microtime(true);
+benchmark(function(callable $dump_benchmark_fn) {
+    $array = new StringSetStrIndex();
+    for ($i = 0; $i < 1_000_000; $i++) {
+        $array->add("index-".$i, strval($i));
+    }
 
-$array = new StringSetStrIndex();
-for ($i = 0; $i < 1_000_000; $i++) {
-    $array->add("index-".$i, strval($i));
-}
-
-dump_benchmark($start_time);
+    $dump_benchmark_fn();
+});
 
 // =============================================================================
 //
@@ -313,14 +334,14 @@ class ImmutableIntSet implements \IteratorAggregate {
     }
 }
 
-$start_time = microtime(true);
+benchmark(function(callable $dump_benchmark_fn) {
+    $array = new ImmutableIntSet();
+    for ($i = 0; $i < 1_000_000; $i++) {
+        $array = $array->add($i, $i);
+    }
 
-$array = new ImmutableIntSet();
-for ($i = 0; $i < 1_000_000; $i++) {
-    $array = $array->add($i, $i);
-}
-
-dump_benchmark($start_time);
+    $dump_benchmark_fn();
+});
 
 // ============================== Benchmark 12 =================================
 
@@ -355,14 +376,14 @@ class ImmutableIntSetStrIndex implements \IteratorAggregate {
     }
 }
 
-$start_time = microtime(true);
+benchmark(function(callable $dump_benchmark_fn) {
+    $array = new ImmutableIntSetStrIndex();
+    for ($i = 0; $i < 1_000_000; $i++) {
+        $array = $array->add("index-".$i, $i);
+    }
 
-$array = new ImmutableIntSetStrIndex();
-for ($i = 0; $i < 1_000_000; $i++) {
-    $array = $array->add("index-".$i, $i);
-}
-
-dump_benchmark($start_time);
+    $dump_benchmark_fn();
+});
 
 // ============================== Benchmark 13 =================================
 
@@ -397,14 +418,14 @@ class ImmutableStringSet implements \IteratorAggregate {
     }
 }
 
-$start_time = microtime(true);
+benchmark(function(callable $dump_benchmark_fn) {
+    $array = new ImmutableStringSet();
+    for ($i = 0; $i < 1_000_000; $i++) {
+        $array = $array->add($i, strval($i));
+    }
 
-$array = new ImmutableStringSet();
-for ($i = 0; $i < 1_000_000; $i++) {
-    $array = $array->add($i, strval($i));
-}
-
-dump_benchmark($start_time);
+    $dump_benchmark_fn();
+});
 
 // ============================== Benchmark 14 =================================
 
@@ -439,13 +460,13 @@ class ImmutableStringSetStrIndex implements \IteratorAggregate {
     }
 }
 
-$start_time = microtime(true);
+benchmark(function(callable $dump_benchmark_fn) {
+    $array = new ImmutableStringSetStrIndex();
+    for ($i = 0; $i < 1_000_000; $i++) {
+        $array = $array->add("index-".$i, strval($i));
+    }
 
-$array = new ImmutableStringSetStrIndex();
-for ($i = 0; $i < 1_000_000; $i++) {
-    $array = $array->add("index-".$i, strval($i));
-}
-
-dump_benchmark($start_time);
+    $dump_benchmark_fn();
+});
 
 // =============================================================================
