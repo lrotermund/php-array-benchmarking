@@ -5,6 +5,7 @@ declare(strict_types=1);
 class BenchmarkResult {
     public function __construct(
         public readonly string $title,
+        public readonly string $value_group,
         public readonly float $pre_memory_usage,
         public readonly float $post_memory_usage,
         public readonly float $execution_time,
@@ -21,6 +22,7 @@ $benchmark_results = new \ArrayObject();
 
 function save_benchmark(
     string $title,
+    string $value_group,
     int $pre_memory_usage,
     float $start_time,
 ) {
@@ -30,6 +32,7 @@ function save_benchmark(
 
     $benchmark_results[] = new BenchmarkResult(
         title: $title,
+        value_group: $value_group,
         pre_memory_usage: $pre_memory_usage,
         post_memory_usage: memory_get_usage(real_usage: true),
         execution_time: $end_time - $start_time,
@@ -37,11 +40,16 @@ function save_benchmark(
 }
 
 function benchmark(callable $benchmark_fn) {
+    // Warmup run
+    $benchmark_fn(function () {});
+
     $start_time = microtime(as_float: true);
     $start_memory_usage = memory_get_usage(real_usage: true);
 
-    $benchmark_fn(fn (string $title) => save_benchmark(
+    // Benchmark
+    $benchmark_fn(fn (string $title, string $value_group) => save_benchmark(
         $title,
+        $value_group,
         $start_memory_usage,
         $start_time,
     ));
@@ -71,12 +79,22 @@ foreach ($benchmarks as $benchmark) {
 }
 
 $benchmark_results->uasort(function(BenchmarkResult $a, BenchmarkResult $b) {
-    return $a->memory_usage() <=> $b->memory_usage();
+    $comparison = $a->value_group <=> $b->value_group;
+    if ($comparison !== 0) {
+        return $comparison;
+    }
+
+    $comparison = $a->memory_usage() <=> $b->memory_usage();
+    if ($comparison !== 0) {
+        return $comparison;
+    }
+
+    return $a->execution_time <=> $b->execution_time;
 });
 
 echo "\n";
-echo "| No.  | Title                               | Memory usage      | Pre memory usage  | Post memory usage | Execution time |\n";
-echo "|------|-------------------------------------|-------------------|-------------------|-------------------|----------------|\n";
+echo "| No.  | Title                                            | Memory usage      | Pre memory usage  | Post memory usage | Execution time |\n";
+echo "|------|--------------------------------------------------|-------------------|-------------------|-------------------|----------------|\n";
 
 $row = 0;
 
@@ -86,7 +104,7 @@ foreach ($benchmark_results as $benchmark_result) {
     echo sprintf(
         "| %'.02d   | %s | %s bytes | %s bytes | %s bytes | %s seconds |\n",
         $row,
-        rpad($benchmark_result->title, length: 35),
+        rpad($benchmark_result->title, length: 48),
         lpad(number_format($benchmark_result->memory_usage())),
         lpad(number_format($benchmark_result->pre_memory_usage)),
         lpad(number_format($benchmark_result->post_memory_usage)),

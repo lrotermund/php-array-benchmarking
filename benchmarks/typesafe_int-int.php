@@ -1,6 +1,6 @@
 <?php
 
-namespace Benchmark5;
+namespace Benchmark\IntArray\int;
 
 # `IntArray<int, int>` Typesafe int array object (int index) benchmark...
 
@@ -20,5 +20,5 @@ benchmark(function(callable $save_benchmark_fn) {
         $array[$i] = $i;
     }
 
-    $save_benchmark_fn('IntArray<int, int>');
+    $save_benchmark_fn('IntArray<int, int>', 'int');
 });

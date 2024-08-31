@@ -1,6 +1,6 @@
 <?php
 
-namespace Benchmark3;
+namespace Benchmark\array\int_string;
 
 # `array<int, string>` Plain fake auto indexed string array benchmark...
 
@@ -10,5 +10,5 @@ benchmark(function(callable $save_benchmark_fn) {
         $array[] = strval($i);
     }
 
-    $save_benchmark_fn('array<int, string>');
+    $save_benchmark_fn('array<int, string>', 'string');
 });

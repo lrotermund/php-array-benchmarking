@@ -4,29 +4,49 @@ services:
     volumes:
       - ./benchmarks:/usr/src/benchmark/benchmarks
       - ./benchmark.php:/usr/src/benchmark/benchmark.php
+      - ./php.ini:/usr/local/etc/php/php.ini
     working_dir: /usr/src/benchmark
     command: ["php", "./benchmark.php"]
+    deploy:
+      resources:
+        limits:
+          memory: 1024m
 
   php82-benchmark:
     image: php:8.2-cli
     volumes:
       - ./benchmarks:/usr/src/benchmark/benchmarks
       - ./benchmark.php:/usr/src/benchmark/benchmark.php
+      - ./php.ini:/usr/local/etc/php/php.ini
     working_dir: /usr/src/benchmark
     command: ["php", "./benchmark.php"]
+    deploy:
+      resources:
+        limits:
+          memory: 1024m
 
   php83-benchmark:
     image: php:8.3-cli
     volumes:
       - ./benchmarks:/usr/src/benchmark/benchmarks
       - ./benchmark.php:/usr/src/benchmark/benchmark.php
+      - ./php.ini:/usr/local/etc/php/php.ini
     working_dir: /usr/src/benchmark
     command: ["php", "./benchmark.php"]
+    deploy:
+      resources:
+        limits:
+          memory: 1024m
 
   php84-benchmark:
     image: php:8.4.0alpha4-cli
     volumes:
       - ./benchmarks:/usr/src/benchmark/benchmarks
       - ./benchmark.php:/usr/src/benchmark/benchmark.php
+      - ./php.ini:/usr/local/etc/php/php.ini
     working_dir: /usr/src/benchmark
     command: ["php", "./benchmark.php"]
+    deploy:
+      resources:
+        limits:
+          memory: 1024m

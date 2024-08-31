@@ -1,6 +1,6 @@
 <?php
 
-namespace Benchmark2;
+namespace Benchmark\array\string_int;
 
 # `array<string, int>` Plain string indexed array benchmark...
 
@@ -10,5 +10,5 @@ benchmark(function(callable $save_benchmark_fn) {
         $array["index-".$i] = $i;
     }
 
-    $save_benchmark_fn('array<string, int>');
+    $save_benchmark_fn('array<string, int>', 'int');
 });

@@ -1,6 +1,6 @@
 <?php
 
-namespace Benchmark13;
+namespace Benchmark\Immutable\IntSet\int_int;
 
 # `ImmutableIntSet<int, int>` Typesafe, immutable int set object (int index) benchmark...
 
@@ -39,5 +39,5 @@ benchmark(function(callable $save_benchmark_fn) {
         $array = $array->add($i, $i);
     }
 
-    $save_benchmark_fn('ImmutableIntSet<int, int>');
+    $save_benchmark_fn('ImmutableIntSet<int, int>', 'int');
 });

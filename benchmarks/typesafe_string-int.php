@@ -1,6 +1,6 @@
 <?php
 
-namespace Benchmark6;
+namespace Benchmark\IntArray\string;
 
 # `IntArray<string, int>` Typesafe int array object (string index) benchmark...
 
@@ -20,5 +20,5 @@ benchmark(function(callable $save_benchmark_fn) {
         $array["index-".$i] = $i;
     }
 
-    $save_benchmark_fn('IntArray<string, int>');
+    $save_benchmark_fn('IntArray<string, int>', 'int');
 });

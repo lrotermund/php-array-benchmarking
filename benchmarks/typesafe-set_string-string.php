@@ -1,6 +1,6 @@
 <?php
 
-namespace Benchmark12;
+namespace Benchmark\StringSet\string_string;
 
 # `StringSet<string, string>` Typesafe string set object (string index) benchmark...
 
@@ -36,5 +36,5 @@ benchmark(function(callable $save_benchmark_fn) {
         $array->add("index-".$i, strval($i));
     }
 
-    $save_benchmark_fn('StringSet<string, string>');
+    $save_benchmark_fn('StringSet<string, string>', 'string');
 });

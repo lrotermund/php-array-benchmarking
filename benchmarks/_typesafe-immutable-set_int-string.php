@@ -1,6 +1,6 @@
 <?php
 
-namespace Benchmark15;
+namespace Benchmark\Immutable\StringSet\int_string;
 
 # `ImmutableStringSet<int, string>` Typesafe, immutable string set object (int index) benchmark...
 
@@ -39,5 +39,5 @@ benchmark(function(callable $save_benchmark_fn) {
         $array = $array->add($i, strval($i));
     }
 
-    $save_benchmark_fn('ImmutableStringSet<int, string>');
+    $save_benchmark_fn('ImmutableStringSet<int, string>', 'string');
 });

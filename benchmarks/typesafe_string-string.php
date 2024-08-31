@@ -1,6 +1,6 @@
 <?php
 
-namespace Benchmark8;
+namespace Benchmark\StringArray\string;
 
 # `StringArray<string, string>` Typesafe string array object (string index) benchmark...
 
@@ -20,5 +20,5 @@ benchmark(function(callable $save_benchmark_fn) {
         $array["index-".$i] = strval($i);
     }
 
-    $save_benchmark_fn('StringArray<string, string>');
+    $save_benchmark_fn('StringArray<string, string>', 'string');
 });

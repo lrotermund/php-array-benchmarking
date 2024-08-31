@@ -1,6 +1,6 @@
 <?php
 
-namespace Benchmark9;
+namespace Benchmark\IntSet\int_int;
 
 # `IntSet<int, int>` Typesafe int set object (int index) benchmark...
 
@@ -36,5 +36,5 @@ benchmark(function(callable $save_benchmark_fn) {
         $array->add($i, $i);
     }
 
-    $save_benchmark_fn('IntSet<int, int>');
+    $save_benchmark_fn('IntSet<int, int>', 'int');
 });
