@@ -2,9 +2,7 @@
 
 namespace Benchmark4;
 
-// ============================== Benchmark 4 ==================================
-
-echo "04. `array<string, string>` Plain string indexed array benchmark...\n";
+# `array<string, string>` Plain string indexed array benchmark...
 
 benchmark(function(callable $save_benchmark_fn) {
     $array = [];
@@ -12,5 +10,5 @@ benchmark(function(callable $save_benchmark_fn) {
         $array["index-".$i] = strval($i);
     }
 
-    $save_benchmark_fn();
+    $save_benchmark_fn('array<string, string>');
 });

@@ -1,10 +1,8 @@
 <?php
 
-namespace Benchmark5;
+namespace Benchmark6;
 
-// ============================== Benchmark 5 ==================================
-
-echo "05. `IntArray<int, int>` Typesafe int array object (int index) benchmark...\n";
+# `IntArray<string, int>` Typesafe int array object (string index) benchmark...
 
 class IntArray extends \ArrayObject {
     public function offsetSet($index, $new_value): void {
@@ -19,8 +17,8 @@ class IntArray extends \ArrayObject {
 benchmark(function(callable $save_benchmark_fn) {
     $array = new IntArray();
     for ($i = 0; $i < 1_000_000; $i++) {
-        $array[$i] = $i;
+        $array["index-".$i] = $i;
     }
 
-    $save_benchmark_fn();
+    $save_benchmark_fn('IntArray<string, int>');
 });

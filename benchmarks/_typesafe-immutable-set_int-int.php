@@ -1,10 +1,8 @@
 <?php
 
-namespace Benchmark14;
+namespace Benchmark13;
 
-// ============================== Benchmark 14 =================================
-
-echo "14. `ImmutableIntSet<string, int>` Typesafe, immutable int set object (string index) benchmark...\n";
+# `ImmutableIntSet<int, int>` Typesafe, immutable int set object (int index) benchmark...
 
 class ImmutableIntSet implements \IteratorAggregate {
     protected array $values = [];
@@ -13,17 +11,17 @@ class ImmutableIntSet implements \IteratorAggregate {
         return new \ArrayIterator($this->values);
     }
 
-    public function has(string $key): bool {
+    public function has(int $key): bool {
         return isset($this->value[$key]);
     }
 
-    public function get(string $key): int|null {
+    public function get(int $key): int|null {
         return $this->has($key)
             ? $this->values[$key]
             : null;
     }
 
-    public function add(string $key, int $new_value): static {
+    public function add(int $key, int $new_value): static {
         if ($this->has($key)) {
             return $this;
         }
@@ -38,8 +36,8 @@ class ImmutableIntSet implements \IteratorAggregate {
 benchmark(function(callable $save_benchmark_fn) {
     $array = new ImmutableIntSet();
     for ($i = 0; $i < 1_000_000; $i++) {
-        $array = $array->add("index-".$i, $i);
+        $array = $array->add($i, $i);
     }
 
-    $save_benchmark_fn();
+    $save_benchmark_fn('ImmutableIntSet<int, int>');
 });

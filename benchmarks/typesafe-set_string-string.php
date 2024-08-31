@@ -1,12 +1,10 @@
 <?php
 
-namespace Benchmark16;
+namespace Benchmark12;
 
-// ============================== Benchmark 16 =================================
+# `StringSet<string, string>` Typesafe string set object (string index) benchmark...
 
-echo "16. `ImmutableStringSet<string, string>` Typesafe, immutable string set object (string index) benchmark...";
-
-class ImmutableStringSet implements \IteratorAggregate {
+class StringSet implements \IteratorAggregate {
     protected array $values = [];
 
     public function getIterator(): \Traversable {
@@ -24,22 +22,19 @@ class ImmutableStringSet implements \IteratorAggregate {
     }
 
     public function add(string $key, string $new_value): static {
-        if ($this->has($key)) {
-            return $this;
+        if ($this->has($key) === false) {
+            $this->values[$key] = $new_value;
         }
 
-        $new_set = clone($this);
-        $new_set->values = [...$this->values, $new_value];
-
-        return $new_set;
+        return $this;
     }
 }
 
 benchmark(function(callable $save_benchmark_fn) {
-    $array = new ImmutableStringSet();
+    $array = new StringSet();
     for ($i = 0; $i < 1_000_000; $i++) {
-        $array = $array->add("index-".$i, strval($i));
+        $array->add("index-".$i, strval($i));
     }
 
-    $save_benchmark_fn();
+    $save_benchmark_fn('StringSet<string, string>');
 });

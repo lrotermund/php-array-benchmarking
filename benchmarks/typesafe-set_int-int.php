@@ -2,9 +2,7 @@
 
 namespace Benchmark9;
 
-// ============================== Benchmark 9 ==================================
-
-echo "09. `IntSet<int, int>` Typesafe int set object (int index) benchmark...\n";
+# `IntSet<int, int>` Typesafe int set object (int index) benchmark...
 
 class IntSet implements \IteratorAggregate {
     protected array $values = [];
@@ -38,5 +36,5 @@ benchmark(function(callable $save_benchmark_fn) {
         $array->add($i, $i);
     }
 
-    $save_benchmark_fn();
+    $save_benchmark_fn('IntSet<int, int>');
 });

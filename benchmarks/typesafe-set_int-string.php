@@ -1,10 +1,8 @@
 <?php
 
-namespace Benchmark12;
+namespace Benchmark11;
 
-// ============================== Benchmark 12 =================================
-
-echo "12. `StringSet<string, string>` Typesafe string set object (string index) benchmark...\n";
+# `StringSet<int, string>` Typesafe string set object (int index) benchmark...
 
 class StringSet implements \IteratorAggregate {
     protected array $values = [];
@@ -13,17 +11,17 @@ class StringSet implements \IteratorAggregate {
         return new \ArrayIterator($this->values);
     }
 
-    public function has(string $key): bool {
+    public function has(int $key): bool {
         return isset($this->value[$key]);
     }
 
-    public function get(string $key): string|null {
+    public function get(int $key): string|null {
         return $this->has($key)
             ? $this->values[$key]
             : null;
     }
 
-    public function add(string $key, string $new_value): static {
+    public function add(int $key, string $new_value): static {
         if ($this->has($key) === false) {
             $this->values[$key] = $new_value;
         }
@@ -35,8 +33,8 @@ class StringSet implements \IteratorAggregate {
 benchmark(function(callable $save_benchmark_fn) {
     $array = new StringSet();
     for ($i = 0; $i < 1_000_000; $i++) {
-        $array->add("index-".$i, strval($i));
+        $array->add($i, strval($i));
     }
 
-    $save_benchmark_fn();
+    $save_benchmark_fn('StringSet<int, string>');
 });
