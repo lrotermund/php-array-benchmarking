@@ -30,13 +30,6 @@ while ! check_services_stopped; do
   sleep 1
 done
 
-output_php80=$(docker compose logs php80-benchmark)
-echo ""
-echo "-------------------------------------------------------------------------"
-echo "PHP 8.0 Benchmark:"
-echo "$output_php80"
-echo "-------------------------------------------------------------------------"
-
 output_php81=$(docker compose logs php81-benchmark)
 echo ""
 echo "-------------------------------------------------------------------------"

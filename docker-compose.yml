@@ -1,14 +1,8 @@
 services:
-  php80-benchmark:
-    image: php:8.0-cli
-    volumes:
-      - ./benchmark.php:/usr/src/benchmark/benchmark.php
-    working_dir: /usr/src/benchmark
-    command: ["php", "./benchmark.php"]
-
   php81-benchmark:
     image: php:8.1-cli
     volumes:
+      - ./benchmarks:/usr/src/benchmark/benchmarks
       - ./benchmark.php:/usr/src/benchmark/benchmark.php
     working_dir: /usr/src/benchmark
     command: ["php", "./benchmark.php"]
@@ -16,6 +10,7 @@ services:
   php82-benchmark:
     image: php:8.2-cli
     volumes:
+      - ./benchmarks:/usr/src/benchmark/benchmarks
       - ./benchmark.php:/usr/src/benchmark/benchmark.php
     working_dir: /usr/src/benchmark
     command: ["php", "./benchmark.php"]
@@ -23,6 +18,7 @@ services:
   php83-benchmark:
     image: php:8.3-cli
     volumes:
+      - ./benchmarks:/usr/src/benchmark/benchmarks
       - ./benchmark.php:/usr/src/benchmark/benchmark.php
     working_dir: /usr/src/benchmark
     command: ["php", "./benchmark.php"]
@@ -30,6 +26,7 @@ services:
   php84-benchmark:
     image: php:8.4.0alpha4-cli
     volumes:
+      - ./benchmarks:/usr/src/benchmark/benchmarks
       - ./benchmark.php:/usr/src/benchmark/benchmark.php
     working_dir: /usr/src/benchmark
     command: ["php", "./benchmark.php"]
