@@ -13,19 +13,6 @@ class BenchmarkResult {
     public function memory_usage(): float {
         return $this->post_memory_usage - $this->pre_memory_usage;
     }
-
-    public function dump(): void {
-        echo "\nBenchmark completed.\n";
-        echo "Post Benchmark Memory Usage:\t"
-            . number_format($this->post_memory_usage)
-            . " bytes\n";
-        echo "Execution Time:\t\t\t"
-            . number_format($this->execution_time, decimals: 10)
-            . " seconds\n";
-        echo "Memory Usage:\t\t\t"
-            . number_format($this->memory_usage())
-            . " bytes\n";
-    }
 }
 
 /** @var \ArrayObject<int, BenchmarkResult> */
